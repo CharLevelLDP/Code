@@ -48,7 +48,6 @@ OpenAI: 2.2.0
 sentence-transformers: 4.1.0
 tqdm: 4.67.1
 CUDA: 12.6
-GPU: NVIDIA H100 PCIe
 ```
 
 ## Data
