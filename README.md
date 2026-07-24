@@ -5,45 +5,24 @@ This repository contains the main code for our character-level local differentia
 ## Method
 
 Before a prompt is sent to a remote language model, each printable non-space ASCII character is independently perturbed using k-ary randomized response.
-
 The privatized prompt is then sent to the language model, which attempts to restore the distorted text and perform the downstream summarization task.
 
-The main idea is that common words can often be recovered from context, while uncommon names, identifiers, and other sensitive terms remain harder to reconstruct.
 
-![Methodology](images/methodology.png)
 
-## Full Inference
+![Methodology](Images/Method.png)
 
-`Full_inference.py` runs the complete pipeline:
 
-```text
-Original prompt
-    ↓
-Character-level k-RR
-    ↓
-Privatized prompt
-    ↓
-LLM restoration and summarization
-    ↓
-Semantic utility score
-```
-
-The script applies LDP, sends the privatized text to the language model, produces the restored summary, and saves the detailed and average semantic-similarity results.
-
-## Separate Restoration and Summarization
-
-The same process is also provided as two separate scripts:
+`Full_inference.py` runs the complete pipeline. The script applies LDP, sends the privatized text to the language model, produces the restored summary.
+ The same process is also provided as two separate scripts:
 
 - `LDP_Restoration.py` applies LDP and saves the restored text.
-- `Summarization.py` summarizes the original and restored texts separately and compares the two summaries.
+- `Summarization.py` uses GPT-5.4 to summarize the original and restored texts separately, then compares the two summaries using all-distilroberta-v1 cosine similarity.
 
 We separated these stages so that the restored text could be inspected independently and the effect of restoration could be measured separately from the summarization task.
 
 The unified system prompt used in the full pipeline is:
 
-> You are a text restoration and summarization assistant. First, correct only the errors introduced by distortion/noise. Do not make any unnecessary changes. Preserve the original wording, punctuation, capitalization, and formatting as much as possible. Second, create a concise and accurate summary of the restored text. Focus on the main ideas and key details, and avoid unnecessary details. Do not add opinions or any prefacing.
-
-![System prompt](images/system_prompt.png)
+![System prompt](Images/prompt.png)
 
 ## Epsilon Calibration
 
@@ -110,7 +89,3 @@ Run calibration:
 ```bash
 python Calibration.py
 ```
-
-## License
-
-This repository is released under the MIT License.
